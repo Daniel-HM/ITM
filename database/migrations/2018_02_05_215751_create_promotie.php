@@ -24,7 +24,7 @@ class CreatePromotie extends Migration
             $table->date('einddatum');
         });
 
-        Schema::table('promoties', function (Blueprint $table) {
+        Schema::table('promotie', function (Blueprint $table) {
             $table->foreign('artikelnr')
                 ->references('artikelnr')
                 ->on('artikel');

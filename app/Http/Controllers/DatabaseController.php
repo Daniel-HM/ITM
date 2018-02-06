@@ -42,6 +42,7 @@ class DatabaseController extends Controller
                 }
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=1');
+                fclose($this->db_path);
             });
             Storage::delete($this->db_path);
             return redirect('/')->with('status', 'Done!');
@@ -72,6 +73,7 @@ class DatabaseController extends Controller
                 }
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=1');
+                fclose($this->db_path);
             });
         }
     }
@@ -96,6 +98,7 @@ class DatabaseController extends Controller
                 }
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=1');
+                fclose($this->db_path);
             });
         }
     }
@@ -123,6 +126,7 @@ class DatabaseController extends Controller
                 }
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=1');
+                fclose($this->db_path);
             });
         }
     }
@@ -155,6 +159,7 @@ class DatabaseController extends Controller
                 }
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=1');
+                fclose($this->db_path);
             });
 //            return redirect('/')->with('status', 'Done!');
             return view('home')->with('status', 'Done');
