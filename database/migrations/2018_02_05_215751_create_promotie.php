@@ -3,9 +3,8 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
 
-class CreatePromoties extends Migration
+class CreatePromotie extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +14,7 @@ class CreatePromoties extends Migration
     public function up()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::create('promoties', function (Blueprint $table) {
+        Schema::create('promotie', function (Blueprint $table) {
             $table->engine = "InnoDB";
             $table->increments('id');
             $table->string('naam', 255);
@@ -40,6 +39,6 @@ class CreatePromoties extends Migration
      */
     public function down()
     {
-        Schema::drop('promoties');
+        Schema::drop('promotie');
     }
 }
