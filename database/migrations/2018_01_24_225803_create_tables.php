@@ -51,6 +51,7 @@ class CreateTables extends Migration
             $table->char('ean', 13);
             $table->index('ean');
             $table->string('artikelnr', 50);
+            $table->index('artikelnr');
             $table->string('omschrijving', 50)->nullable()->default('Geen omschrijving.');
             $table->index('omschrijving');
             $table->decimal('vkprijs', 10);

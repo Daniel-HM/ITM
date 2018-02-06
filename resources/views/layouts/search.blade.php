@@ -4,8 +4,13 @@
            placeholder="EAN13 / Omschrijving" required
            autofocus>
     @isset($artikel)
-    @if(count($artikel) > 1)
-        <small class="form-text text-muted">{{ count($artikel) }} resultaten</small>
+        @if(count($artikel) > 1)
+            <small class="form-text text-muted">{{ count($artikel) }} resultaten</small>
+        @endif
+    @endisset
+    @isset($leverancierArtikels)
+        @if(count($leverancierArtikels) > 1)
+            <small class="form-text text-muted">{{ count($leverancierArtikels) }} resultaten</small>
         @endif
     @endisset
     {{ csrf_field() }}

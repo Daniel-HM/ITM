@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class FilesController extends Controller
 {
+
     public function __construct(DatabaseController $databaseController)
     {
         $this->databaseController = $databaseController;
@@ -21,10 +22,10 @@ class FilesController extends Controller
 
     public function handleFile(Request $request)
     {
-
-        if ($request->hasFile('_db')) {
-            $request->file('_db')->storeAs('', 'database.csv');
-            return $this->databaseController->insertDB(storage_path('app/uploads') . '/database.csv');
+        $file = '_db';
+        if ($request->hasFile($file)) {
+            $request->file($file)->storeAs('', $request->file($file)->getClientOriginalName());
+            return $this->databaseController->{$request->table}(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
         }
     }
 }

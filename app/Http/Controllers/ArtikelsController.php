@@ -33,7 +33,7 @@ class ArtikelsController extends Controller
     {
         try {
             $artikel = Cache::remember($ean, 60, function () use ($ean) {
-                return Artikel::where('ean', $ean)->first();
+                return Artikel::whereEan($ean)->first();
             });
 //            $artikel = Artikel::where('ean', $ean)->first();
             $barcode = $this->createBarcode($artikel->ean);

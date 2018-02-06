@@ -9,8 +9,15 @@
                             <h4 class="my-0 font-weight-normal">{{ $artikel->omschrijving }}</h4>
                         </div>
                         <div class="card-body">
-                            <h1 class="card-title pricing-card-title">&euro;{{ $artikel->vkprijs }}
-                            </h1>
+                            <h1 class="card-title pricing-card-title">&euro;{{ $artikel->vkprijs }}</h1>
+                            @isset($artikel->promotie->naam)
+                                <h6>{{ $artikel->promotie->omschrijving }}</h6>
+                                <h5>{{ $artikel->promotie->naam }}</h5>
+                            @endisset
+                            <hr>
+                            <h5><img src="data:image/png;base64,{{ base64_encode($barcode) }}"></h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ $artikel->ean }}</h6>
+
                             <ul class="list-unstyled mt-3 mb-4">
                                 <li>{{ $artikel->subgroep->omschrijving }}</li>
                                 <li>{{ $artikel->subgroep->groep->omschrijving }}</li>
@@ -25,8 +32,6 @@
                                     <li><strong>Leverancier onbekend</strong></li>
                                 @endisset
                             </ul>
-                            <h5><img src="data:image/png;base64,{{ base64_encode($barcode) }}"></h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ $artikel->ean }}</h6>
                         </div>
                     </div>
                 </div>
@@ -88,7 +93,6 @@
                         <td>
                             <small>{{ $single->ean }}</small>
                         </td>
-
 
 
                     </tr>

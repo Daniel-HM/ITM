@@ -19,4 +19,9 @@ class Artikel extends Model
         return $this->belongsTo('App\Subgroep', 'subgroep_id', 'subgroep_id');
     }
 
+    public function promotie()
+    {
+        return $this->hasOne('App\Promotie', 'artikelnr', 'artikelnr');
+    }
+
 }
