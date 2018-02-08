@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('search')
+    @include('layouts.search')
+@stop
 @section('content')
 <div class="container">
     <div class="row">

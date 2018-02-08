@@ -21,15 +21,17 @@
 
     @auth
         @include('layouts.errors')
-        <div class="row justify-content-md-center">
-@include('layouts.search')
-        </div>
+
+        @yield('search')
+
 
         <div class="row justify-content-md-center">
             @yield('content')
         </div>
     @else
-        @yield('content')
+        <div class="row justify-content-md-center">
+            @yield('content')
+        </div>
     @endauth
 </div>
 <!-- /.container -->

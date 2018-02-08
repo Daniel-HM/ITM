@@ -1,3 +1,5 @@
+<div class="row justify-content-md-center">
+
 <form class="form-search" action="{{ url('/') }}" method="POST">
     <label for="query" class="sr-only">EAN13/Omschrijving</label>
     <input type="text" id="query" name="query" class="form-control" autocomplete="off"
@@ -16,3 +18,4 @@
     {{ csrf_field() }}
     <button class="btn btn-lg btn-primary btn-block btn-dark" type="submit" hidden>Zoeken</button>
 </form>
+</div>

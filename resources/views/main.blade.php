@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('search')
+    @include('layouts.search')
+@stop
 @section('content')
     @isset($artikel)
         @if(count($artikel) === 1)
@@ -10,10 +13,17 @@
                         </div>
                         <div class="card-body">
                             <h1 class="card-title pricing-card-title">&euro;{{ $artikel->vkprijs }}</h1>
+
                             @isset($artikel->promotie->naam)
-                                <h6>{{ $artikel->promotie->omschrijving }}</h6>
-                                <h5>{{ $artikel->promotie->naam }}</h5>
+                                @if($artikel->promotie->startdatum < date('Y-m-d') && $artikel->promotie->einddatum > date('Y-m-d'))
+                                    <div class="alert alert-success" role="alert">
+                                        <h5>{{ $artikel->promotie->naam }}</h5>
+                                        Promotie geldig van {{ $artikel->promotie->startdatum }}
+                                        tot {{ $artikel->promotie->einddatum }}
+                                    </div>
+                                @endif
                             @endisset
+
                             <hr>
                             <h5><img src="data:image/png;base64,{{ base64_encode($barcode) }}"></h5>
                             <h6 class="card-subtitle mb-2 text-muted">{{ $artikel->ean }}</h6>

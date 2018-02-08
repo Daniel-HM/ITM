@@ -13,12 +13,19 @@ class ArtikelsController extends Controller
 {
     protected $generator;
 
+    /**
+     * ArtikelsController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth');
         $this->generator = new BarcodeGeneratorPNG();
     }
 
+    /**
+     * @param Request $request
+     * @return input to either find it by EAN or description
+     */
     public function getArtikel(Request $request)
     {
         $input = $request->input('query');
@@ -29,11 +36,15 @@ class ArtikelsController extends Controller
         return $this->getArtikelByDescription($input);
     }
 
+    /**
+     * @param $ean
+     * @return view with object
+     */
     public function getArtikelByEan($ean)
     {
         try {
             $artikel = Cache::remember($ean, 60, function () use ($ean) {
-                return Artikel::whereEan($ean)->first();
+                return Artikel::where('ean', $ean)->first();
             });
 //            $artikel = Artikel::where('ean', $ean)->first();
             $barcode = $this->createBarcode($artikel->ean);
@@ -44,6 +55,10 @@ class ArtikelsController extends Controller
         }
     }
 
+    /**
+     * @param $description
+     * @return view with object
+     */
     public function getArtikelByDescription($description)
     {
         try {
@@ -65,6 +80,10 @@ class ArtikelsController extends Controller
 
     }
 
+    /**
+     * @param $leverancier
+     * @return view with object
+     */
     public function getArtikelsOfLeverancier($leverancier)
     {
         $leverancierArtikels = Artikel::where('leverancier_id', $leverancier)->get();
@@ -72,6 +91,10 @@ class ArtikelsController extends Controller
         return view('main')->with('leverancierArtikels', $leverancierArtikels);
     }
 
+    /**
+     * @param $ean
+     * @return barcode image based on EAN13
+     */
     public function createBarcode($ean)
     {
         try {
