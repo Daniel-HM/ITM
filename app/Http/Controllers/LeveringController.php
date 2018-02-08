@@ -54,7 +54,7 @@ class LeveringController extends Controller
             if ($getal < 10) {
                 $getal = 10;
             }
-            return $getal;
+            return 5 * round($getal / 5);
         }
 
         if ($getal < 10) {
