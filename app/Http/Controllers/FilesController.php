@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\DatabaseController;
 use Storage;
 use Illuminate\Http\Request;
 
@@ -29,7 +28,7 @@ class FilesController extends Controller
 
     /**
      * @param Request $request
-     * @return filepath + name
+     * @return bool or file path
      */
     public function handleFile(Request $request)
     {
@@ -38,5 +37,6 @@ class FilesController extends Controller
             $request->file($file)->storeAs('', $request->file($file)->getClientOriginalName());
             return $this->databaseController->{$request->table}(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
         }
+        return false;
     }
 }

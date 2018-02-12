@@ -47,6 +47,7 @@ class DatabaseController extends Controller
             Storage::delete($this->db_path);
             return redirect('/')->with('status', 'Done!');
         }
+        return redirect('/')->with('status', 'Something went wrong.');
     }
 
     public function leverancier($db)
@@ -164,5 +165,7 @@ class DatabaseController extends Controller
 //            return redirect('/')->with('status', 'Done!');
             return view('home')->with('status', 'Done');
         }
+
+        return redirect('/')->with('status', 'Something went wrong.');
     }
 }

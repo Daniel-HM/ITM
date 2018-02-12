@@ -10,6 +10,11 @@ use GuzzleHttp\Client as GuzzleClient;
 class ScrapeController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /** Scraper for Clayre & Eef website
      *  Save image to storage, EAN to database
      */
@@ -25,7 +30,7 @@ class ScrapeController extends Controller
         // Categorie 1 = home.php?cat=913
         // Laatste categorie = home.php?cat=1122
 
-        $i = 889;
+        $i = 908;
         while ($i <= 912) {
             $crawler = $goutteClient->request('GET', 'https://www.clayre-eef.nl/home.php?cat=' . $i);
             $pageFound = $crawler->filter('h1.category-title.f-left')->extract(['_text']);
@@ -70,24 +75,6 @@ class ScrapeController extends Controller
         }
     }
 
-    public function scrapeTest()
-    {
-        $goutteClient = new Client();
-        $guzzleClient = new GuzzleClient(array(
-            'timeout' => 60,
-        ));
-        $goutteClient->setClient($guzzleClient);
-        $goutteClient->setHeader('user-agent', "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36");
-
-        $crawler = $goutteClient->request('GET', 'https://www.clayre-eef.nl/Decoration-hart-p-35963.html');
-        $image = $crawler->filter('img#zoom_01')->extract(['data-zoom-image']);
-        if ($this->doesImageExistRemotely($image[0])) {
-            echo 'image exists';
-        } else {
-            echo 'image does not exist';
-        }
-
-    }
 
     /**
      * @param $url

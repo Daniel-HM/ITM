@@ -25,24 +25,24 @@ class LeveringController extends Controller
         $nummer = urlencode($request->input('nummer'));
         $stad = urlencode($request->input('stad'));
 
-        $bestemming = $straat . '+' . $nummer . ',' . $stad;
-        $vanuit = $request->input('vanuit');
-        if ($vanuit == 'maldegem') {
-            $vanuit = 'Aardenburgkalseide+301,Maldegem';
-        } elseif ($vanuit == 'lovendegem') {
-            $vanuit = 'Grote+Baan+249,Lovendegem';
+        $destination = $straat . '+' . $nummer . ',' . $stad;
+        $origin = $request->input('vanuit');
+        if ($origin == 'maldegem') {
+            $origin = 'Aardenburgkalseide+301,Maldegem';
+        } elseif ($origin == 'lovendegem') {
+            $origin = 'Grote+Baan+249,Lovendegem';
         }
 
         $client = new Client();
-        $res = $client->request('GET', 'https://maps.googleapis.com/maps/api/distancematrix/json?units=' . $units . '&origins=' . $vanuit . '&destinations=' . $bestemming . '?key=' . $this->api_key);
+        $res = $client->request('GET', 'https://maps.googleapis.com/maps/api/distancematrix/json?units=' . $units . '&origins=' . $origin . '&destinations=' . $destination . '&key=' . $this->api_key);
         $json = json_decode($res->getBody()->getContents(), true);
         $kilometer = round($json['rows'][0]['elements'][0]['distance']['value'] / 1000, 2, PHP_ROUND_HALF_DOWN);
         $kosten = $this->berekenen($kilometer);
         $request->flash();
 
-        $vanuit = urldecode(str_replace(',', ', ', $vanuit));
-        $bestemming = urldecode(str_replace(',', ', ', $bestemming));
-        return view('levering.home')->with(compact('kosten', 'vanuit', 'bestemming', 'kilometer'));
+        $origin = urldecode(str_replace(',', ', ', $origin));
+        $destination = urldecode(str_replace(',', ', ', $destination));
+        return view('levering.home')->with(compact('kosten', 'origin', 'destination', 'kilometer'));
 
     }
 

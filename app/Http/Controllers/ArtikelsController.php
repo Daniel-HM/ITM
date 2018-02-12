@@ -76,23 +76,20 @@ class ArtikelsController extends Controller
         } catch (\Exception $e) {
             return view('main')->with('notFound', 'Niets gevonden');
         }
-
-
     }
 
     /**
-     * @param $leverancier
+     * @param $leverancier_id
      * @return view with object
      */
-    public function getArtikelsOfLeverancier($leverancier)
+    public function getLeverancierArtikels($leverancier_id)
     {
-        $leverancierArtikels = Artikel::where('leverancier_id', $leverancier)->orderBy('omschrijving')->with('image')->get();
-        if ($leverancier == 300748) {
-            $artikelWithImage = Artikel::whereHas('image')->count();
-            return view('main')->with(['leverancierArtikels' => $leverancierArtikels, 'artikelWithImage' => $artikelWithImage]);
-        }
+        $artikel = Artikel::with('image', 'leverancier')
+            ->where('leverancier_id', $leverancier_id)
+            ->orderBy('omschrijving')
+            ->get(['ean', 'omschrijving', 'vkprijs']);
 
-        return view('main')->with(['leverancierArtikels' => $leverancierArtikels]);
+        return view('main')->with(['artikel' => $artikel, 'noLeverancierCol' => true]);
     }
 
     /**

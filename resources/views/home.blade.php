@@ -27,6 +27,9 @@
                         <td><strong>Clayre & Eef afbeeldingen</strong></td>
                         <td>{{ $data['clayreImageCount'] }}</td>
                     </tr>
+                    <tr>
+                        <td colspan="2"><a class="btn btn-success" href="{{ route('levering') }}" role="button">Leveringskosten berekenen</a></td>
+                    </tr>
                 </table>
             </div>
         </div>

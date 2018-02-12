@@ -44,16 +44,16 @@
                         <div class="card mb-4 box-shadow">
                             <div class="card-header">
                                 <h3>&euro;{{ $kosten }}</h3>
-                                <h6>{{ $kilometer }} KM</h6>
+                                <h6>{{ $kilometer*2 }} KM</h6>
                                 <dl class="row">
                                     <dt class="col-sm-2">Van</dt>
                                     <dd class="col-sm-4">
-                                        <small>{{ $vanuit }}</small>
+                                        <small>{{ $origin }}</small>
                                     </dd>
 
                                     <dt class="col-sm-2">Naar</dt>
                                     <dd class="col-sm-4">
-                                        <small>{{ $bestemming }}</small>
+                                        <small>{{ $destination }}</small>
                                     </dd>
                                 </dl>
 
@@ -63,6 +63,11 @@
                 </div>
             </div>
         @endisset
+        <div class="row ">
+            <div class="col">
+                <a class="btn btn-success" href="{{ route('home') }}" role="button">Terug</a>
+            </div>
+        </div>
     </div>
 
 @stop

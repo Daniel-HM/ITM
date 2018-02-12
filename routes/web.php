@@ -19,31 +19,21 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index', function () {
 })->name('home');
+
 Route::post('/', 'ArtikelsController@getArtikel', function () {
 });
 
-Route::get('/ean/{ean}', 'ArtikelsController@getArtikelByEan', function ($ean) {
+Route::get('/artikel/{ean}', 'ArtikelsController@getArtikelByEan', function ($ean) {
 });
-Route::get('/leverancier/{leverancier}', 'ArtikelsController@getArtikelsOfLeverancier', function ($leverancier) {
+Route::get('/leverancier/{leverancier_id}', 'ArtikelsController@getLeverancierArtikels', function ($leverancier) {
 });
-
-Route::get('/setdb', 'DatabaseController@insertDB');
-Route::get('/setlev', 'DatabaseController@insertLeveranciers');
-Route::get('/setgroepen', 'DatabaseController@insertGroepen');
-
 
 Route::get('/upload', 'FilesController@index');
 Route::post('/upload', 'FilesController@handleFile');
 
-
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
-Route::get('/levering', 'LeveringController@index');
+Route::get('/levering', 'LeveringController@index')->name('levering');
 Route::post('/levering', 'LeveringController@kosten');
 
 Route::get('/scrape', 'ScrapeController@scrape');
-Route::get('/scrapetest', 'ScrapeController@scrapeTest');
-
-Route::get('/asd', 'ArtikelsController@matchedImages');
