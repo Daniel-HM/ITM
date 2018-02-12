@@ -42,6 +42,9 @@
                                     <li><strong>Leverancier onbekend</strong></li>
                                 @endisset
                             </ul>
+                            @isset($artikel->image->name)
+                                <img src="/images/clayre/{{ $artikel->image->name }}" class="img-fluid">
+                            @endisset
                         </div>
                     </div>
                 </div>
@@ -62,6 +65,9 @@
                         <tr>
                             <th scope="row"><a class="link-unstyled"
                                                href="{{ url('/ean/'. $single->ean) }}">{{ $single->omschrijving }}</a>
+                                @isset($single->image->name)
+                                    <span class="badge badge-secondary">*</span>
+                                @endisset
                             </th>
                             <td>€{{ number_format($single->vkprijs, 2) }}</td>
                             <td>
@@ -69,7 +75,8 @@
                             </td>
                             <td class="d-none d-sm-block">
                                 @isset($single->leverancier->naam)
-                                    {{ $single->leverancier->naam }}
+                                    <a class="link-unstyled"
+                                       href="{{ url('/leverancier/' . $single->leverancier_id) }}">{{ $single->leverancier->naam }}</a>
                                 @else
                                     Onbekend
                                 @endisset
@@ -98,6 +105,9 @@
                     <tr>
                         <th scope="row"><a class="link-unstyled"
                                            href="{{ url('/ean/'. $single->ean) }}">{{ $single->omschrijving }}</a>
+                            @isset($single->image->name)
+                                <span class="badge badge-secondary">*</span>
+                            @endisset
                         </th>
                         <td>€{{ number_format($single->vkprijs, 2) }}</td>
                         <td>

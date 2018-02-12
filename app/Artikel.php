@@ -34,4 +34,10 @@ class Artikel extends Model
         return $this->hasOne('App\Promotie', 'artikelnr', 'artikelnr');
     }
 
+    public function image()
+    {
+        return $this->hasOne('App\Image', 'ean', 'ean');
+    }
+
+
 }

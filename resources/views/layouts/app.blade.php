@@ -14,6 +14,8 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/app.css" rel="stylesheet">
+    <script defer src="/js/fontawesome.min.js"></script>
+    <script defer src="/js/fa-solid.min.js"></script>
 </head>
 
 <body>
@@ -42,6 +44,7 @@
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -51,7 +54,24 @@
             "searching": false,
             "order": [[0, 'asc']]
         });
+        // If cookie is set, scroll to the position saved in the cookie.
+        if ($.cookie("scroll") !== null) {
+            $(document).scrollTop($.cookie("scroll"));
+            $.removeCookie("scroll");
+        }
+
+        // When a link is clicked...
+        $('.link-unstyled').on("click", function () {
+            // Set a cookie that holds the scroll position.
+            $.cookie("scroll", $(document).scrollTop());
+        });//end of submit
+        $('#search').on("submit", function () {
+            // Remove cookie
+            $.removeCookie("scroll");
+        });//end of submit
+
     });
+
 </script>
 </body>
 </html>

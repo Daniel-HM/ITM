@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Artikel;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use \Picqer\Barcode\BarcodeGeneratorPNG;
 use Illuminate\Support\Facades\Cache;
 
@@ -24,7 +24,7 @@ class ArtikelsController extends Controller
 
     /**
      * @param Request $request
-     * @return input to either find it by EAN or description
+     * @return input|view
      */
     public function getArtikel(Request $request)
     {
@@ -62,7 +62,7 @@ class ArtikelsController extends Controller
     public function getArtikelByDescription($description)
     {
         try {
-            $artikel = Artikel::with('leverancier')->where('omschrijving', 'like', '%' . $description . '%')
+            $artikel = Artikel::with('leverancier', 'image')->where('omschrijving', 'like', '%' . $description . '%')
                 ->limit(200)->orderBy('omschrijving', 'ASC')->get();
             if ($artikel->isEmpty()) {
                 throw new \Exception();
@@ -86,14 +86,18 @@ class ArtikelsController extends Controller
      */
     public function getArtikelsOfLeverancier($leverancier)
     {
-        $leverancierArtikels = Artikel::where('leverancier_id', $leverancier)->get();
+        $leverancierArtikels = Artikel::where('leverancier_id', $leverancier)->orderBy('omschrijving')->with('image')->get();
+        if ($leverancier == 300748) {
+            $artikelWithImage = Artikel::whereHas('image')->count();
+            return view('main')->with(['leverancierArtikels' => $leverancierArtikels, 'artikelWithImage' => $artikelWithImage]);
+        }
 
-        return view('main')->with('leverancierArtikels', $leverancierArtikels);
+        return view('main')->with(['leverancierArtikels' => $leverancierArtikels]);
     }
 
     /**
      * @param $ean
-     * @return barcode image based on EAN13
+     * @return string (base64 image)
      */
     public function createBarcode($ean)
     {

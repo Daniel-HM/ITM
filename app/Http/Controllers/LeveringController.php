@@ -19,7 +19,7 @@ class LeveringController extends Controller
         return view('levering.home');
     }
 
-    public function kosten(Request $request)
+    public function kosten(Request $request, $units = 'metric')
     {
         $straat = urlencode($request->input('straat'));
         $nummer = urlencode($request->input('nummer'));
@@ -34,7 +34,7 @@ class LeveringController extends Controller
         }
 
         $client = new Client();
-        $res = $client->request('GET', 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=' . $vanuit . '&destinations=' . $bestemming);
+        $res = $client->request('GET', 'https://maps.googleapis.com/maps/api/distancematrix/json?units=' . $units . '&origins=' . $vanuit . '&destinations=' . $bestemming . '?key=' . $this->api_key);
         $json = json_decode($res->getBody()->getContents(), true);
         $kilometer = round($json['rows'][0]['elements'][0]['distance']['value'] / 1000, 2, PHP_ROUND_HALF_DOWN);
         $kosten = $this->berekenen($kilometer);
@@ -65,4 +65,5 @@ class LeveringController extends Controller
         return $getal;
 
     }
+
 }

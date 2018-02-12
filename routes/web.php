@@ -12,6 +12,9 @@
 |
 */
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 Auth::routes();
 
 Route::get('/', 'HomeController@index', function () {
@@ -39,3 +42,8 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::get('/levering', 'LeveringController@index');
 Route::post('/levering', 'LeveringController@kosten');
+
+Route::get('/scrape', 'ScrapeController@scrape');
+Route::get('/scrapetest', 'ScrapeController@scrapeTest');
+
+Route::get('/asd', 'ArtikelsController@matchedImages');
