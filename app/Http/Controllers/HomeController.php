@@ -27,7 +27,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
         $data['artikelCount'] = Cache::remember('artikelCount', 60, function () {
             return Artikel::count();
         });

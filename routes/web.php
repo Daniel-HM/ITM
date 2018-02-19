@@ -36,4 +36,5 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/levering', 'LeveringController@index')->name('levering');
 Route::post('/levering', 'LeveringController@kosten');
 
-Route::get('/scrape', 'ScrapeController@scrape');
+Route::get('/add_user', 'UsersController@addUser')->middleware('isAdmin');
+Route::post('/add_user', 'UsersController@create')->middleware('isAdmin');

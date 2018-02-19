@@ -7,11 +7,11 @@ use GuzzleHttp\Client;
 
 class LeveringController extends Controller
 {
-    protected $api_key;
+    protected $google_api_key;
 
     public function __construct()
     {
-        $this->api_key = env('GOOGLE_API_KEY');
+        $this->google_api_key = env('GOOGLE_API_KEY');
     }
 
     public function index()
@@ -34,15 +34,16 @@ class LeveringController extends Controller
         }
 
         $client = new Client();
-        $res = $client->request('GET', 'https://maps.googleapis.com/maps/api/distancematrix/json?units=' . $units . '&origins=' . $origin . '&destinations=' . $destination . '&key=' . $this->api_key);
+        $res = $client->request('GET', 'https://maps.googleapis.com/maps/api/distancematrix/json?units=' . $units . '&origins=' . $origin . '&destinations=' . $destination . '&key=' . $this->google_api_key);
         $json = json_decode($res->getBody()->getContents(), true);
         $kilometer = round($json['rows'][0]['elements'][0]['distance']['value'] / 1000, 2, PHP_ROUND_HALF_DOWN);
         $kosten = $this->berekenen($kilometer);
         $request->flash();
-
+        $embedUrl = 'https://www.google.com/maps/embed/v1/directions?key='.$this->google_api_key.'&maptype=satellite&origin='.$origin.'&destination='.$destination;
         $origin = urldecode(str_replace(',', ', ', $origin));
         $destination = urldecode(str_replace(',', ', ', $destination));
-        return view('levering.home')->with(compact('kosten', 'origin', 'destination', 'kilometer'));
+
+        return view('levering.home')->with(compact('kosten', 'origin', 'destination', 'kilometer', 'embedUrl'));
 
     }
 

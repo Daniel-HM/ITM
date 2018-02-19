@@ -46,7 +46,6 @@ class ArtikelsController extends Controller
             $artikel = Cache::remember($ean, 60, function () use ($ean) {
                 return Artikel::where('ean', $ean)->first();
             });
-//            $artikel = Artikel::where('ean', $ean)->first();
             $barcode = $this->createBarcode($artikel->ean);
 
             return view('main')->with(['artikel' => $artikel, 'barcode' => $barcode]);
