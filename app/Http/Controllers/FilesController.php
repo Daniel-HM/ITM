@@ -7,14 +7,18 @@ use Illuminate\Http\Request;
 
 class FilesController extends Controller
 {
+    private $databaseStagingController;
+    private $databaseController;
 
     /**
      * FilesController constructor.
      * @param \App\Http\Controllers\DatabaseController $databaseController
+     * @param DatabaseStagingController $databaseStagingController
      */
-    public function __construct(DatabaseController $databaseController)
+    public function __construct(DatabaseController $databaseController, DatabaseStagingController $databaseStagingController)
     {
-        $this->databaseController = $databaseController;
+//        $this->databaseController = $databaseController;
+        $this->databaseStagingController = $databaseStagingController;
         $this->middleware('auth');
     }
 
@@ -35,7 +39,8 @@ class FilesController extends Controller
         $file = '_db';
         if ($request->hasFile($file)) {
             $request->file($file)->storeAs('', $request->file($file)->getClientOriginalName());
-            return $this->databaseController->{$request->table}(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
+//            return $this->databaseController->{$request->table}(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
+            return $this->databaseStagingController->{$request->table . '_staging'}(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
         }
         return false;
     }

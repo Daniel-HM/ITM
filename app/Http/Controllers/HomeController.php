@@ -27,15 +27,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data['artikelCount'] = Cache::remember('artikelCount', 60, function () {
-            return Artikel::count();
-        });
-        $data['leverancierCount'] = Cache::remember('leverancierCount', 60, function () {
-            return Leverancier::count();
-        });
-        $data['clayreImageCount'] = Cache::remember('clayreImageCount', 5, function () {
-            return Image::where('leverancier_id', 300748)->count();
-        });
+        $data['artikelCount'] = Artikel::count();
+        $data['leverancierCount'] = Leverancier::count();
+        $data['clayreImageCount'] = Image::where('leverancier_id', 300748)->count();
         return view('home')->with('data', $data);
     }
 }

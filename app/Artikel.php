@@ -8,6 +8,8 @@ class Artikel extends Model
 {
 
     protected $table = 'artikel';
+    public $fillable = ['ean', 'artikelnr', 'omschrijving', 'vkprijs', 'inkprijs', 'leverancier_id', 'subgroep_id'];
+    public $timestamps = false;
 
 
     /**
