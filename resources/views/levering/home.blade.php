@@ -5,7 +5,7 @@
             <div class="row mt-2">
                 <div class="col">
                     <div class="card-deck mb-3 text-center">
-                        <div class="card mb-4 box-shadow">
+                        <div class="card box-shadow">
                             <div class="card-header">
                                 <h3>&euro;{{ $kosten }}</h3>
                                 <h6>{{ $kilometer*2 }} KM</h6>
@@ -33,7 +33,7 @@
                         <div class="card box-shadow">
                             <iframe
                                     width="100%"
-                                    height="100%"
+                                    height="250px"
                                     frameborder="0"
                                     src="{{ $embedUrl }}" allowfullscreen>
                             </iframe>

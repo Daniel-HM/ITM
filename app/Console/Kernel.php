@@ -19,13 +19,16 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
+     *  Crontab -e
+     *  * * * * * php /home/vagrant/code/ITM/artisan schedule:run >> /dev/null 2>&1
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        if ( !$this->osProcessIsRunning('queue:work') ) {
+            $schedule->command('queue:work')->everyMinute();
+        }
     }
 
     /**

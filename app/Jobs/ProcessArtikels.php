@@ -55,6 +55,7 @@ class ProcessArtikels implements ShouldQueue
      */
     public function handle(ArtikelStaging $artikelStaging, Artikel $artikel, Leverancier $leverancier, Groep $groep, Subgroep $subgroep)
     {
+        Log::info('Database processing has begun!');
         foreach ($artikelStaging->all() as $item) {
             $leverancier->firstOrCreate(['leverancier_id' => $item->leverancier_id], [
                 'naam' => $item->leverancier_naam
