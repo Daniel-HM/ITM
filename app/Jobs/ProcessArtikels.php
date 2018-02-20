@@ -24,7 +24,7 @@ class ProcessArtikels implements ShouldQueue
      *
      * @var int
      */
-    public $timeout = 60;
+    public $timeout = 180;
 
     /**
      * The number of times the job may be attempted.

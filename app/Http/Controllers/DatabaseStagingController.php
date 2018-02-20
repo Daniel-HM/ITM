@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessPromoties;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessArtikels;
@@ -33,6 +34,29 @@ IGNORE 2 LINES
             });
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
             ProcessArtikels::dispatch();
+            Storage::delete($this->db_path);
+            return redirect('/')->with('status', 'Database word verwerkt!');
+        }
+        return redirect('/')->with('status', 'Something went wrong.');
+    }
+
+    public function promotie_staging($db)
+    {
+        $this->db_path = $db;
+        if (file_exists($this->db_path)) {
+            DB::table('promotie_staging')->truncate();
+            DB::transaction(function () {
+                $query = 'LOAD DATA LOCAL INFILE \'' . $this->db_path . '\' INTO TABLE promotie_staging
+FIELDS TERMINATED BY \';\'
+LINES TERMINATED BY \'\r\n\'
+IGNORE 1 LINES
+(@dummy,@dummy,@dummy,@col4,@dummy,@dummy,@col7,@dummy,@dummy,@dummy,@col11,@col12,@dummy,@dummy,@dummy,@col16,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy)
+ set naam=@col4,artikelnr=@col7,startdatum=@col11,einddatum=@col12,omschrijving=@col16;';
+                DB::statement('SET FOREIGN_KEY_CHECKS=0');
+                DB::connection()->getpdo()->exec($query);
+            });
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            ProcessPromoties::dispatch();
             Storage::delete($this->db_path);
             return redirect('/')->with('status', 'Database word verwerkt!');
         }

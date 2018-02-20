@@ -13,9 +13,6 @@
                             <label for="table">Welke table?</label>
                             <select class="form-control" id="table" name="table">
                                 <option value="artikel">Artikel</option>
-                                <option value="leverancier">Leverancier</option>
-                                <option value="groep">Groep</option>
-                                <option value="subgroep">Subgroep</option>
                                 <option value="promotie">Promotie</option>
                             </select>
                         </div>
