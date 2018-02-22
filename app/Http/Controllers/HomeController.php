@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Artikel;
 use App\Leverancier;
 use App\Image;
-use Illuminate\Support\Facades\Cache;
 
 
 class HomeController extends Controller
@@ -32,4 +31,5 @@ class HomeController extends Controller
         $data['clayreImageCount'] = Image::where('leverancier_id', 300748)->count();
         return view('home')->with('data', $data);
     }
+
 }

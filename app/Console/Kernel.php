@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
      * Define the application's command schedule.
      *
      *  Crontab -e
-     *  * * * * * php /home/vagrant/code/ITM/artisan schedule:run >> /dev/null 2>&1
+     *  * * * * * php7.1 /home/vagrant/code/ITM/artisan schedule:run >> /dev/null 2>&1
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */

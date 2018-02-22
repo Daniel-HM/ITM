@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Storage;
 use Illuminate\Http\Request;
 
 class FilesController extends Controller
 {
     private $databaseStagingController;
-    private $databaseController;
 
     /**
      * FilesController constructor.
-     * @param \App\Http\Controllers\DatabaseController $databaseController
      * @param DatabaseStagingController $databaseStagingController
      */
-    public function __construct(DatabaseController $databaseController, DatabaseStagingController $databaseStagingController)
+    public function __construct(DatabaseStagingController $databaseStagingController)
     {
-//        $this->databaseController = $databaseController;
         $this->databaseStagingController = $databaseStagingController;
         $this->middleware('auth');
     }
@@ -40,7 +36,7 @@ class FilesController extends Controller
         if ($request->hasFile($file)) {
             $request->file($file)->storeAs('', $request->file($file)->getClientOriginalName());
 //            return $this->databaseController->{$request->table}(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
-            return $this->databaseStagingController->{$request->table . '_staging'}(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
+            return $this->databaseStagingController->dispatchToRightStagingTable(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
         }
         return false;
     }

@@ -12,7 +12,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
 
 class ProcessArtikels implements ShouldQueue
 {
@@ -55,23 +57,31 @@ class ProcessArtikels implements ShouldQueue
      */
     public function handle(ArtikelStaging $artikelStaging, Artikel $artikel, Leverancier $leverancier, Groep $groep, Subgroep $subgroep)
     {
-        Log::info('Database processing has begun!');
-        foreach ($artikelStaging->all() as $item) {
+        Log::info('Artikel database processing has begun!');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        foreach ($artikelStaging->groupBy('leverancier_id')->get() as $item) {
             $leverancier->firstOrCreate(['leverancier_id' => $item->leverancier_id], [
                 'naam' => $item->leverancier_naam
             ]);
+        }
+        foreach ($artikelStaging->groupBy('subgroep_id')->get() as $item) {
             $groep->firstOrCreate(['groep_id' => $item->groep_id], ['omschrijving' => $item->groep_naam]);
             $subgroep->firstOrCreate(['subgroep_id' => $item->subgroep_id], ['omschrijving' => $item->subgroep_naam, 'groep_id' => $item->groep_id]);
-            $artikel->updateOrCreate(['ean' => $item->ean], [
-                'ean' => $item->ean,
-                'artikelnr' => $item->artikelnr,
-                'omschrijving' => trim($item->omschrijving),
-                'vkprijs' => str_replace(',', '.', $item->vkprijs),
-                'inkprijs' => str_replace(',', '.', $item->inkprijs),
-                'leverancier_id' => $item->leverancier_id,
-                'subgroep_id' => $item->subgroep_id
-            ]);
         }
-        Log::info('Database processing is done!');
+        $artikelStaging->chunk(1000, function ($items)use($artikel) {
+            foreach ($items as $item) {
+                $artikel->updateOrCreate(['ean' => $item->ean], [
+                    'ean' => $item->ean,
+                    'artikelnr' => $item->artikelnr,
+                    'omschrijving' => trim($item->omschrijving),
+                    'vkprijs' => str_replace(',', '.', $item->vkprijs),
+                    'inkprijs' => str_replace(',', '.', $item->inkprijs),
+                    'leverancier_id' => $item->leverancier_id,
+                    'subgroep_id' => $item->subgroep_id
+                ]);
+            }
+        });
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Log::info('Artikel database processing is done!');
     }
 }

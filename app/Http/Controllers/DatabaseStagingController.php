@@ -6,7 +6,6 @@ use App\Jobs\ProcessPromoties;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessArtikels;
-use Symfony\Component\Process\Process;
 
 class DatabaseStagingController extends Controller
 {
@@ -17,13 +16,13 @@ class DatabaseStagingController extends Controller
         $this->middleware('auth');
     }
 
-    public function artikel_staging($db)
+    public function artikel_staging()
     {
-        $this->db_path = $db;
-        if (file_exists($this->db_path)) {
+        try {
             DB::table('artikel_staging')->truncate();
             DB::transaction(function () {
-                $query = 'LOAD DATA LOCAL INFILE \'' . $this->db_path . '\' INTO TABLE artikel_staging
+                DB::statement('SET NAMES utf8mb4');
+                $query = 'LOAD DATA LOCAL INFILE \'' . $this->db_path . '\' INTO TABLE artikel_staging CHARACTER SET latin1
 FIELDS TERMINATED BY \';\'
 LINES TERMINATED BY \'\r\n\'
 IGNORE 2 LINES
@@ -36,17 +35,18 @@ IGNORE 2 LINES
             ProcessArtikels::dispatch();
             Storage::delete($this->db_path);
             return redirect('/')->with('status', 'Database word verwerkt!');
+        } catch (\Exception $e) {
+            return redirect('/')->with('status', $e->getMessage());
         }
-        return redirect('/')->with('status', 'Something went wrong.');
     }
 
-    public function promotie_staging($db)
+    public function promotie_staging()
     {
-        $this->db_path = $db;
-        if (file_exists($this->db_path)) {
+        try {
             DB::table('promotie_staging')->truncate();
             DB::transaction(function () {
-                $query = 'LOAD DATA LOCAL INFILE \'' . $this->db_path . '\' INTO TABLE promotie_staging
+                DB::statement('SET NAMES utf8mb4');
+                $query = 'LOAD DATA LOCAL INFILE \'' . $this->db_path . '\' INTO TABLE promotie_staging CHARACTER SET latin1
 FIELDS TERMINATED BY \';\'
 LINES TERMINATED BY \'\r\n\'
 IGNORE 1 LINES
@@ -59,8 +59,30 @@ IGNORE 1 LINES
             ProcessPromoties::dispatch();
             Storage::delete($this->db_path);
             return redirect('/')->with('status', 'Database word verwerkt!');
+        } catch (\Exception $e) {
+            return redirect('/')->with('status', $e->getMessage());
         }
-        return redirect('/')->with('status', 'Something went wrong.');
+
+    }
+
+    public function dispatchToRightStagingTable($db)
+    {
+        $this->db_path = $db;
+        if (file_exists($this->db_path)) {
+            if (($handle = fopen($this->db_path, "r")) !== FALSE) {
+                while (($field = fgetcsv($handle, 1000, ";")) !== false) {
+                    if ($field[0] === '32084') {
+                        fclose($handle);
+                        return $this->artikel_staging($this->db_path);
+                    } elseif ($field[0] === 'Actiecode') {
+                        fclose($handle);
+                        return $this->promotie_staging();
+                    }
+                    return redirect('/upload')->with('status', 'Something went wrong');
+                }
+            }
+        }
+        return redirect('/upload')->with('status', 'Something went wrong');
     }
 
 }

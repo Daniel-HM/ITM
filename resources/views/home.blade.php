@@ -16,19 +16,20 @@
                 </div>
                 <table class="table">
                     <tr>
-                        <td><strong>Artikels in DB</strong></td>
+                        <td><strong>Artikels</strong></td>
                         <td>{{ $data['artikelCount'] }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Leveranciers in DB</strong></td>
+                        <td><strong>Leveranciers</strong></td>
                         <td>{{ $data['leverancierCount'] }}</td>
                     </tr>
+                    {{--<tr>--}}
+                    {{--<td><strong>Clayre & Eef afbeeldingen</strong></td>--}}
+                    {{--<td>{{ $data['clayreImageCount'] }}</td>--}}
+                    {{--</tr>--}}
                     <tr>
-                        <td><strong>Clayre & Eef afbeeldingen</strong></td>
-                        <td>{{ $data['clayreImageCount'] }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><a class="btn btn-success" href="{{ route('levering') }}" role="button">Leveringskosten berekenen</a></td>
+                        <td colspan="2"><a class="btn btn-success" href="{{ route('levering') }}" role="button">Leveringskosten
+                                berekenen</a></td>
                     </tr>
                 </table>
             </div>

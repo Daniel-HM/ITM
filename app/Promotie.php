@@ -12,6 +12,12 @@ class Promotie extends Model
      */
     protected $table = 'promotie';
 
+    public $timestamps = false;
+
+    public $fillable = [
+        'artikelnr', 'naam','omschrijving','startdatum','einddatum'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

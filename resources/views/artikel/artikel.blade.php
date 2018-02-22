@@ -5,9 +5,23 @@
                 <h4 class="my-0 font-weight-normal">{{ $artikel->omschrijving }}</h4>
             </div>
             <div class="card-body">
-                <h1 class="card-title pricing-card-title">&euro;{{ $artikel->vkprijs }}</h1>
-                <p><small>Inkoop: €{{ $artikel->inkprijs }}</small></p>
+                @isset($artikel->promotie->naam)
+                    @if($artikel->promotie->startdatum < date('Y-m-d') && $artikel->promotie->einddatum > date('Y-m-d'))
 
+                        <div class="alert alert-success" role="alert">
+                            <h1 class="card-title pricing-card-title"><s>&euro;{{ $artikel->vkprijs }}</s></h1>
+                            <h6>{{ $artikel->promotie->omschrijving }}</h6>
+                        </div>
+                    @else
+                        <h1 class="card-title pricing-card-title">&euro;{{ $artikel->vkprijs }}</h1>
+                    @endif
+                @endisset
+                @if(auth()->user()->isAdmin())
+
+                    @endif
+                <p>
+                    <small>Inkoop: €{{ $artikel->inkprijs }}</small>
+                </p>
                 @isset($artikel->promotie->naam)
                     @if($artikel->promotie->startdatum < date('Y-m-d') && $artikel->promotie->einddatum > date('Y-m-d'))
                         <div class="alert alert-success" role="alert">

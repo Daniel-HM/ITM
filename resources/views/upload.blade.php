@@ -10,13 +10,6 @@
                             <input type="file" class="form-control-file" id="database" name="_db">
                         </div>
                         <div class="form-group">
-                            <label for="table">Welke table?</label>
-                            <select class="form-control" id="table" name="table">
-                                <option value="artikel">Artikel</option>
-                                <option value="promotie">Promotie</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <button type="submit" class="btn btn-dark">Upload</button>
                         </div>
                     </div>
