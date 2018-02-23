@@ -35,18 +35,20 @@ class ProcessArtikels implements ShouldQueue
      */
     public $tries = 1;
 
+    protected $db;
+
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param $db
      */
-    public function __construct()
+    public function __construct($db)
     {
-        //
+        $this->db = $db;
     }
 
     /**
-     * Execute the job.
+     * Execute the job. || 33K rows in ~31 sec (22/02/2018)
      *
      * @param ArtikelStaging $artikelStaging
      * @param Artikel $artikel
@@ -59,6 +61,19 @@ class ProcessArtikels implements ShouldQueue
     {
         Log::info('Artikel database processing has begun!');
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        DB::table('artikel_staging')->truncate();
+        DB::transaction(function () {
+            DB::statement('SET NAMES utf8mb4');
+            $query = 'LOAD DATA LOCAL INFILE \'' . $this->db . '\' INTO TABLE artikel_staging CHARACTER SET latin1
+FIELDS TERMINATED BY \';\'
+LINES TERMINATED BY \'\r\n\'
+IGNORE 2 LINES
+(@dummy,@col2,@col3,@col4,@col5,@col6,@col7,@col8,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@col17,@col18,@col19,@col20)
+ set ean=@col4,artikelnr=@col2,omschrijving=@col3,vkprijs=@col5,inkprijs=@col8,leverancier_id=@col6,leverancier_naam=@col7,subgroep_id=@col17,subgroep_naam=@col18,groep_id=@col19,groep_naam=@col20;';
+            DB::connection()->getpdo()->exec($query);
+        });
+
         foreach ($artikelStaging->groupBy('leverancier_id')->get() as $item) {
             $leverancier->firstOrCreate(['leverancier_id' => $item->leverancier_id], [
                 'naam' => $item->leverancier_naam
@@ -68,7 +83,7 @@ class ProcessArtikels implements ShouldQueue
             $groep->firstOrCreate(['groep_id' => $item->groep_id], ['omschrijving' => $item->groep_naam]);
             $subgroep->firstOrCreate(['subgroep_id' => $item->subgroep_id], ['omschrijving' => $item->subgroep_naam, 'groep_id' => $item->groep_id]);
         }
-        $artikelStaging->chunk(1000, function ($items)use($artikel) {
+        $artikelStaging->chunk(1000, function ($items) use ($artikel) {
             foreach ($items as $item) {
                 $artikel->updateOrCreate(['ean' => $item->ean], [
                     'ean' => $item->ean,

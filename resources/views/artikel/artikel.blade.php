@@ -17,11 +17,10 @@
                     @endif
                 @endisset
                 @if(auth()->user()->isAdmin())
-
-                    @endif
-                <p>
-                    <small>Inkoop: €{{ $artikel->inkprijs }}</small>
-                </p>
+                    <p>
+                        <small>Inkoop: €{{ $artikel->inkprijs }}</small>
+                    </p>
+                @endif
                 @isset($artikel->promotie->naam)
                     @if($artikel->promotie->startdatum < date('Y-m-d') && $artikel->promotie->einddatum > date('Y-m-d'))
                         <div class="alert alert-success" role="alert">

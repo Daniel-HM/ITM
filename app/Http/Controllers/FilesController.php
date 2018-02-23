@@ -6,15 +6,15 @@ use Illuminate\Http\Request;
 
 class FilesController extends Controller
 {
-    private $databaseStagingController;
+    private $jobsController;
 
     /**
      * FilesController constructor.
-     * @param DatabaseStagingController $databaseStagingController
+     * @param JobsController $jobsController
      */
-    public function __construct(DatabaseStagingController $databaseStagingController)
+    public function __construct(JobsController $jobsController)
     {
-        $this->databaseStagingController = $databaseStagingController;
+        $this->jobsController = $jobsController;
         $this->middleware('auth');
     }
 
@@ -35,8 +35,7 @@ class FilesController extends Controller
         $file = '_db';
         if ($request->hasFile($file)) {
             $request->file($file)->storeAs('', $request->file($file)->getClientOriginalName());
-//            return $this->databaseController->{$request->table}(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
-            return $this->databaseStagingController->dispatchToRightStagingTable(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
+            return $this->jobsController->dispatchToQueue(storage_path('app/uploads/') . $request->file($file)->getClientOriginalName());
         }
         return false;
     }
