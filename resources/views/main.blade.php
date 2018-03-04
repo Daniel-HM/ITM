@@ -1,13 +1,16 @@
 @extends('layouts.app')
-@section('search')
-    @include('layouts.search')
+@section('navbar')
+    @include('layouts.nav')
 @stop
 @section('content')
-    @isset($artikel)
-        @if(count($artikel) === 1)
-            @include('artikel.artikel')
-        @elseif(count($artikel) > 1)
-            @include('artikel.listartikel')
-        @endif
-    @endisset
+    {{--@isset($artikel)--}}
+        {{--@if(count($artikel) === 1)--}}
+            {{--@include('artikel.show')--}}
+        {{--@elseif(count($artikel) > 1)--}}
+            {{--@include('artikel.showlist')--}}
+        {{--@endif--}}
+    {{--@endisset--}}
+    {{--@isset($promoArtikel)--}}
+        {{--@include('artikel.promo')--}}
+    {{--@endisset--}}
 @stop

@@ -1,19 +1,20 @@
 @extends('layouts.app')
-@section('search')
-    @include('layouts.search')
-@stop
 @section('content')
-    <div class="col-lg-6 col-sx-4 offset-sx-4">
-        @if (session('status'))
-            <div class="alert alert-success">
-                {{ session('status') }}
+    <div class="card-deck mb-3">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-bold">Home</h4>
             </div>
-        @endif
-        <div class="card-deck mb-3 text-center">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Statistieken</h4>
-                </div>
+            <div class="card-body">
+                <p>Een aanrader om het gebruik van deze website gemakkelijker te maken is <a target="_blank"
+                                                                                             href="https://play.google.com/store/apps/details?id=com.tecit.android.barcodekbd.demo">Barcode
+                        Scanner Keyboard</a>.</p>
+            </div>
+
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal text-center">Statistieken</h4>
+            </div>
+            <div class="card-body">
                 <table class="table">
                     <tr>
                         <td><strong>Artikels</strong></td>
@@ -23,13 +24,13 @@
                         <td><strong>Leveranciers</strong></td>
                         <td>{{ $data['leverancierCount'] }}</td>
                     </tr>
-                    {{--<tr>--}}
-                    {{--<td><strong>Clayre & Eef afbeeldingen</strong></td>--}}
-                    {{--<td>{{ $data['clayreImageCount'] }}</td>--}}
-                    {{--</tr>--}}
                     <tr>
-                        <td colspan="2"><a class="btn btn-success" href="{{ route('levering') }}" role="button">Leveringskosten
-                                berekenen</a></td>
+                        <td><strong>Artikels in promotie</strong></td>
+                        <td>{{ $data['activePromotieCount'] }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Laatste database update</strong></td>
+                        <td>{{ $data['lastArtikelDatabaseUpdate'] }}</td>
                     </tr>
                 </table>
             </div>

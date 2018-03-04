@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Artikel;
 use App\Leverancier;
-use App\Image;
-
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -22,13 +21,25 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
+     * @param Artikel $artikel
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Artikel $artikel)
     {
-        $data['artikelCount'] = Artikel::count();
-        $data['leverancierCount'] = Leverancier::count();
-        $data['clayreImageCount'] = Image::where('leverancier_id', 300748)->count();
+        $data['artikelCount'] =  Cache::remember('artikelCount', 60, function () use ($artikel) {
+            return $artikel->count();
+        });
+        $data['leverancierCount'] = Cache::remember('leverancierCount', 60, function () {
+            return Leverancier::count();
+        });
+        $data['activePromotieCount'] = Cache::remember('activePromotieCount', 60, function () use ($artikel){
+            return $artikel->activePromoties()->count();
+        });
+        // REMOVE BEFORE DEPLOY
+//        Cache::forget('artikelCount');
+//        Cache::forget('leverancierCount');
+//        Cache::forget('activePromotieCount');
+        $data['lastArtikelDatabaseUpdate'] = Cache::get('lastArtikelDatabaseUpdate');
         return view('home')->with('data', $data);
     }
 

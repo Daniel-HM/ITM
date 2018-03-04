@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Promotie extends Model
 {
-
     /**
      * @var string
      */
@@ -15,7 +14,7 @@ class Promotie extends Model
     public $timestamps = false;
 
     public $fillable = [
-        'artikelnr', 'naam','omschrijving','startdatum','einddatum'
+        'artikelnr', 'naam', 'omschrijving', 'startdatum', 'einddatum', 'ean'
     ];
 
     /**
@@ -23,6 +22,6 @@ class Promotie extends Model
      */
     public function artikel()
     {
-        return $this->belongsTo('App\Artikel', 'artikelnr', 'artikelnr');
+        return $this->belongsTo('App\Artikel', 'ean', 'ean');
     }
 }

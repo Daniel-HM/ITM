@@ -1,4 +1,5 @@
-<div class="col-lg-6 col-sx-4 offset-sx-4">
+@extends('layouts.app')
+@section('content')
     <div class="card-deck mb-3 text-center">
         <div class="card mb-4 box-shadow">
             <div class="card-header">
@@ -6,16 +7,18 @@
             </div>
             <div class="card-body">
                 @isset($artikel->promotie->naam)
-                    @if($artikel->promotie->startdatum < date('Y-m-d') && $artikel->promotie->einddatum > date('Y-m-d'))
+                    @if($artikel->promotie->startdatum <= date('Y-m-d') && $artikel->promotie->einddatum >= date('Y-m-d'))
 
                         <div class="alert alert-success" role="alert">
-                            <h1 class="card-title pricing-card-title"><s>&euro;{{ $artikel->vkprijs }}</s></h1>
+                            <h1 class="card-title pricing-card-title oude-prijs">&euro;{{ $artikel->vkprijs }}</h1>
                             <h6>{{ $artikel->promotie->omschrijving }}</h6>
                         </div>
-                    @else
-                        <h1 class="card-title pricing-card-title">&euro;{{ $artikel->vkprijs }}</h1>
-                    @endif
-                @endisset
+                    @endisset
+                @else
+
+                    <h1 class="card-title pricing-card-title">&euro;{{ $artikel->vkprijs }}</h1>
+                @endif
+
                 @if(auth()->user()->isAdmin())
                     <p>
                         <small>Inkoop: €{{ $artikel->inkprijs }}</small>
@@ -34,6 +37,7 @@
                 <hr>
                 <h5><img src="data:image/png;base64,{{ base64_encode($barcode) }}"></h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{ $artikel->ean }}</h6>
+                <p class="text-muted">Artikelnr. {{ $artikel->artikelnr }}</p>
 
                 <ul class="list-unstyled mt-3 mb-4">
                     <li>{{ $artikel->subgroep->omschrijving }}</li>
@@ -55,4 +59,4 @@
             </div>
         </div>
     </div>
-</div>
+@stop

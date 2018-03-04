@@ -16,4 +16,9 @@ class Leverancier extends Model
     {
         return $this->hasMany('App\Artikel', 'leverancier_id', 'leverancier_id');
     }
+
+    public function getAll()
+    {
+        return $this->orderBy('naam', 'ASC')->get();
+    }
 }

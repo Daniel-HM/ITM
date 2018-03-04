@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Leverancier;
 use Illuminate\Http\Request;
 use App\Artikel;
-use Illuminate\Support\Facades\Validator;
 use \Picqer\Barcode\BarcodeGeneratorPNG;
 use Illuminate\Support\Facades\Cache;
 
@@ -12,83 +12,111 @@ use Illuminate\Support\Facades\Cache;
 class ArtikelsController extends Controller
 {
     protected $generator;
+    private $artikel;
 
     /**
      * ArtikelsController constructor.
+     * @param Artikel $artikel
      */
-    public function __construct()
+    public function __construct(Artikel $artikel)
     {
         $this->middleware('auth');
+        $this->artikel = $artikel;
         $this->generator = new BarcodeGeneratorPNG();
     }
 
+
     /**
      * @param Request $request
-     * @return input|view
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function getArtikel(Request $request)
     {
+        $searchOption = $request->input('searchOption');
         $input = $request->input('query');
-
-        if (Validator::make($request->all(), ['query' => 'digits:13'])->passes()) {
-            return $this->getArtikelByEan($input);
+        $request->flash();
+        switch ($searchOption) {
+            case 'ean':
+                return $this->show($this->artikel->getArtikelByEan($input));
+                break;
+            case 'naam':
+                return $this->show($this->artikel->getArtikelByDescription($input));
+                break;
+            case 'artikelnr':
+                return $this->show($this->artikel->getArtikelByArtikelnr($input));
+                break;
+            case 'leverancier':
+                return $this->getLeverancier($input);
+                break;
         }
-        return $this->getArtikelByDescription($input);
+        return redirect('/');
     }
 
-    /**
-     * @param $ean
-     * @return view with object
-     */
-    public function getArtikelByEan($ean)
-    {
-        try {
-            $artikel = Cache::remember($ean, 60, function () use ($ean) {
-                return Artikel::where('ean', $ean)->first();
-            });
-            $barcode = $this->createBarcode($artikel->ean);
-
-            return view('main')->with(['artikel' => $artikel, 'barcode' => $barcode]);
-        } catch (\Exception $e) {
-            return view('main')->with('notFound', 'Niets gevonden');
-        }
-    }
-
-    /**
-     * @param $description
-     * @return view with object
-     */
-    public function getArtikelByDescription($description)
-    {
-        try {
-            $artikel = Artikel::with('leverancier', 'image')->where('omschrijving', 'like', '%' . $description . '%')
-                ->limit(200)->orderBy('omschrijving', 'ASC')->get();
-            if ($artikel->isEmpty()) {
-                throw new \Exception();
-            }
-            if ($artikel->count() === 1) {
-                $artikel = $artikel->first();
-                $barcode = $this->createBarcode($artikel->ean);
-                return view('main')->with(['artikel' => $artikel, 'barcode' => $barcode]);
-            }
-            return view('main')->with('artikel', $artikel);
-        } catch (\Exception $e) {
-            return view('main')->with('notFound', 'Niets gevonden');
-        }
-    }
 
     /**
      * @param $leverancier_id
-     * @return view with object
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function getLeverancierArtikels($leverancier_id)
     {
-        $artikel = Artikel::with('image', 'leverancier')
-            ->where('leverancier_id', $leverancier_id)
-            ->orderBy('omschrijving')
-            ->get(['ean', 'omschrijving', 'vkprijs']);
+        $artikel = $this->artikel->getArtikelsOfLeverancier($leverancier_id);
+        return $this->show($artikel, false);
+    }
 
-        return view('main')->with(['artikel' => $artikel, 'noLeverancierCol' => true]);
+    public function getArtikelByEan($ean)
+    {
+        return $this->show($this->artikel->getArtikelByEan($ean));
+    }
+
+
+    /**
+     * @param $artikel
+     * @param bool $showLeverancierCol
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
+    public function show($artikel, $showLeverancierCol = true)
+    {
+        $artikelCount = count($artikel);
+        try {
+            if ($artikelCount === 0) {
+                return back()->with(['message-type' => 'warning',
+                    'message' => 'Niets gevonden']);
+            }
+            if ($artikelCount === 1) {
+                $barcode = $this->createBarcode($artikel->ean);
+                return view('artikel.show')->with(['artikel' => $artikel, 'barcode' => $barcode]);
+            }
+            return view('artikel.showlist')->with(['artikel' => $artikel, 'showLeverancierCol' => $showLeverancierCol]);
+        } catch (\Exception $e) {
+            return back()->with(['message-type' => 'danger',
+                'message' => 'Er is iets fout gegaan..']);
+        }
+    }
+
+
+    public function getLeverancier($query)
+    {
+        $leverancier = Leverancier::where('naam', 'LIKE', '%' . $query . '%')->limit(20)->orderBy('naam', 'ASC')->get();
+        return view('artikel.leveranciers')->with(['leverancier' => $leverancier]);
+    }
+
+    public function showLeveranciers(Leverancier $leverancier)
+    {
+        return view('artikel.leveranciers')->with(['leverancier' => $leverancier->getAll()]);
+    }
+
+    public function showLastAddedArtikels()
+    {
+        $date = Cache::get('lastArtikelDatabaseUpdate');
+        return view('artikel.showlist')->with(['artikel' => $this->artikel->latestArtikels($date), 'showLeverancierCol' => true]);
+    }
+
+    /**
+     *
+     */
+    public function showArtikelsCurrentlyPromo()
+    {
+        return view('artikel.promo')->with(['promoArtikel' => $this->artikel->activePromoties(), 'showLeverancierCol' => true]);
     }
 
     /**

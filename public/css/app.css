@@ -5,14 +5,8 @@ body {
 }
 
 body {
-    display: -ms-flexbox;
-    display: -webkit-box;
-    display: flex;
-    -ms-flex-align: center;
-    -ms-flex-pack: center;
-    -webkit-box-align: center;
-    padding-top: 10px;
-    padding-bottom: 40px;
+    padding-top: 0;
+    padding-bottom: 20px;
     background-color: #212529;
 }
 
@@ -45,7 +39,6 @@ body {
     text-decoration: inherit;
 }
 .container {
-    max-width: 960px;
 }
 
 .pricing-header {
@@ -64,3 +57,7 @@ body {
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
 
 .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+
+.oude-prijs {
+    color: red;
+}

@@ -11,6 +11,7 @@ class LeveringController extends Controller
 
     public function __construct()
     {
+        $this->middleware('auth');
         $this->google_api_key = env('GOOGLE_API_KEY');
     }
 
@@ -39,7 +40,7 @@ class LeveringController extends Controller
         $kilometer = round($json['rows'][0]['elements'][0]['distance']['value'] / 1000, 2, PHP_ROUND_HALF_DOWN);
         $kosten = $this->berekenen($kilometer);
         $request->flash();
-        $embedUrl = 'https://www.google.com/maps/embed/v1/directions?key='.$this->google_api_key.'&maptype=satellite&origin='.$origin.'&destination='.$destination;
+        $embedUrl = 'https://www.google.com/maps/embed/v1/directions?key=' . $this->google_api_key . '&maptype=satellite&origin=' . $origin . '&destination=' . $destination;
         $origin = urldecode(str_replace(',', ', ', $origin));
         $destination = urldecode(str_replace(',', ', ', $destination));
 

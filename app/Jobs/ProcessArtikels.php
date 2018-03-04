@@ -7,11 +7,13 @@ use App\ArtikelStaging;
 use App\Groep;
 use App\Leverancier;
 use App\Subgroep;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -83,6 +85,7 @@ IGNORE 2 LINES
             $groep->firstOrCreate(['groep_id' => $item->groep_id], ['omschrijving' => $item->groep_naam]);
             $subgroep->firstOrCreate(['subgroep_id' => $item->subgroep_id], ['omschrijving' => $item->subgroep_naam, 'groep_id' => $item->groep_id]);
         }
+        Cache::forever('lastArtikelDatabaseUpdate', Carbon::now()->format('Y-m-d H:i:s'));
         $artikelStaging->chunk(1000, function ($items) use ($artikel) {
             foreach ($items as $item) {
                 $artikel->updateOrCreate(['ean' => $item->ean], [
@@ -96,6 +99,8 @@ IGNORE 2 LINES
                 ]);
             }
         });
+        Cache::forget('latestArtikels');
+        Cache::forget('activePromoties');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         Log::info('Artikel database processing is done!');
     }

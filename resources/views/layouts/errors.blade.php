@@ -1,7 +1,5 @@
-@isset($notFound)
-    <div class="col">
-        <div class="alert alert-danger" role="alert">
-            {{ $notFound }}
-        </div>
+@if (session('message'))
+    <div class="my-0 alert alert-{{ session('message-type') }}">
+        {{ session('message') }}
     </div>
 @endif
