@@ -41,3 +41,6 @@ Route::post('/leveringskosten', 'LeveringController@kosten');
 
 Route::get('/add_user', 'UsersController@addUser')->middleware('isAdmin')->name('add_user');
 Route::post('/add_user', 'UsersController@create')->middleware('isAdmin')->name('add_user');
+
+Route::get('/btw', 'BtwController@index')->middleware('auth')->name('btw');
+Route::post('/btw', 'BtwController@show')->middleware('auth')->name('btw');

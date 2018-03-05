@@ -64,6 +64,7 @@ class ProcessArtikels implements ShouldQueue
         Log::info('Artikel database processing has begun!');
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
+
         DB::table('artikel_staging')->truncate();
         DB::transaction(function () {
             DB::statement('SET NAMES utf8mb4');

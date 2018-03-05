@@ -18,16 +18,20 @@ class JobsController extends Controller
                     if ($field[0] === '32084') {
                         fclose($handle);
                         ProcessArtikels::dispatch($this->db);
-                        return redirect('/')->with('status', 'Database word verwerkt!');
+                        return redirect('/')->with(['message-type' => 'success',
+                            'message' => 'Database word verwerkt!']);
                     } elseif ($field[0] === 'Actiecode') {
                         fclose($handle);
                         ProcessPromoties::dispatch($this->db);
-                        return redirect('/')->with('status', 'Database word verwerkt!');
+                        return redirect('/')->with(['message-type' => 'success',
+                            'message' => 'Database word verwerkt!']);
                     }
-                    return redirect('/upload')->with('status', 'Something went wrong');
+                    return redirect('/upload')->with(['message-type' => 'danger',
+                        'message' => 'Er is iets fout gegaan..']);
                 }
             }
         }
-        return redirect('/upload')->with('status', 'Something went wrong');
+        return redirect('/upload')->with(['message-type' => 'danger',
+            'message' => 'Er is iets fout gegaan..']);
     }
 }

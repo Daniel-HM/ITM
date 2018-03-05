@@ -28,7 +28,7 @@
                                     @endisset
                                 </div>
                                 <div>
-                                    <small class="text-muted" style="padding: 0.2rem;">{{ $single->ean }}</small>
+                                    <small class="text-muted">{{ $single->ean }}</small>
                                 </div>
                             </th>
                             <td>€{{ number_format($single->vkprijs, 2) }}</td>

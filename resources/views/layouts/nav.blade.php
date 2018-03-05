@@ -14,6 +14,7 @@
                     <a class="dropdown-item" href="{{ route('laatst-nieuwe-artikels') }}">Laatst nieuwe artikels</a>
                     <a class="dropdown-item" href="{{ route('leveranciers') }}">Leveranciers</a>
                     <a class="dropdown-item" href="{{ route('leveringskosten') }}">Leveringskosten</a>
+                    <a class="dropdown-item" href="{{ route('btw') }}">BTW nummer controleren</a>
                     @if(auth()->user()->isAdmin())
                         <a class="dropdown-item" href="{{ route('upload') }}">Upload</a>
                         <a class="dropdown-item" href="{{ route('add_user') }}">Gebuiker toevoegen</a>

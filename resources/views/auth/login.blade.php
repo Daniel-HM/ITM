@@ -6,7 +6,7 @@
             <div class="card-header">
                 <h4 class="my-0 font-weight-bold">Login</h4>
             </div>
-            <form class="form-horizontal" method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login') }}">
                 {{ csrf_field() }}
 
                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
