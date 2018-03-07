@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Artikel;
 use App\ArtikelStaging;
+use App\DatabaseUpdates;
 use App\Groep;
 use App\Leverancier;
 use App\Subgroep;
@@ -57,14 +58,18 @@ class ProcessArtikels implements ShouldQueue
      * @param Leverancier $leverancier
      * @param Groep $groep
      * @param Subgroep $subgroep
+     * @param DatabaseUpdates $databaseUpdates
      * @return void
      */
-    public function handle(ArtikelStaging $artikelStaging, Artikel $artikel, Leverancier $leverancier, Groep $groep, Subgroep $subgroep)
+    public function handle(ArtikelStaging $artikelStaging, Artikel $artikel, Leverancier $leverancier, Groep $groep, Subgroep $subgroep, DatabaseUpdates $databaseUpdates)
     {
         Log::info('Artikel database processing has begun!');
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-
-
+        $info = [
+            'aantalArtikels' => $artikel->count(),
+            'aantalLeveranciers' => $leverancier->count()
+        ];
+        $databaseUpdates->create(['type' => 'artikel', 'info' => json_encode($info)]);
         DB::table('artikel_staging')->truncate();
         DB::transaction(function () {
             DB::statement('SET NAMES utf8mb4');

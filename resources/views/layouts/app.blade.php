@@ -29,7 +29,7 @@
         </div>
     @else
         <div class="row justify-content-md-center">
-            <div class="col-6">
+            <div class="col-lg-4">
                 @yield('content')
             </div>
         </div>

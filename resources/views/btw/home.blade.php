@@ -41,7 +41,7 @@
                             <input type="text" id="vatNumber" name="vatNumber" class="form-control" autocomplete="off"
                                    placeholder="BTW nummer" required value="{{ old('vatNumber') }}">
                         </div>
-                        <button class="btn btn-outline-primary" type="submit">Zoeken</button>
+                        <button class="btn btn-primary" type="submit">Controleer</button>
                     </form>
                 @endif
             </div>

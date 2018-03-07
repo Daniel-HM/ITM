@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\DatabaseUpdates;
 use App\Promotie;
 use App\PromotieStaging;
 use Illuminate\Bus\Queueable;
@@ -11,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class ProcessPromoties implements ShouldQueue
 {
@@ -82,6 +84,7 @@ IGNORE 1 LINES
                 }
             }
         });
+
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Log::info('Promo database processing has ended.');
     }

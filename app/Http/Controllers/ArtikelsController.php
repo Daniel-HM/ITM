@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DatabaseUpdates;
 use App\Leverancier;
 use Illuminate\Http\Request;
 use App\Artikel;
@@ -107,7 +108,7 @@ class ArtikelsController extends Controller
 
     public function showLastAddedArtikels()
     {
-        $date = Cache::get('lastArtikelDatabaseUpdate');
+        $date = DatabaseUpdates::latest()->first()->created_at;
         return view('artikel.showlist')->with(['artikel' => $this->artikel->latestArtikels($date), 'showLeverancierCol' => true]);
     }
 

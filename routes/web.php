@@ -44,3 +44,6 @@ Route::post('/add_user', 'UsersController@create')->middleware('isAdmin')->name(
 
 Route::get('/btw', 'BtwController@index')->middleware('auth')->name('btw');
 Route::post('/btw', 'BtwController@show')->middleware('auth')->name('btw');
+
+Route::get('/scanner', 'ScannerController@index')->middleware('auth')->name('scanner');
+Route::post('/scanner', 'ScannerController@show')->middleware('auth')->name('scanner');

@@ -17,7 +17,7 @@ class LeveringController extends Controller
 
     public function index()
     {
-        return view('levering.home');
+        return view('levering.index');
     }
 
     public function kosten(Request $request, $units = 'metric')
@@ -44,7 +44,7 @@ class LeveringController extends Controller
         $origin = urldecode(str_replace(',', ', ', $origin));
         $destination = urldecode(str_replace(',', ', ', $destination));
 
-        return view('levering.home')->with(compact('kosten', 'origin', 'destination', 'kilometer', 'embedUrl'));
+        return view('levering.index')->with(compact('kosten', 'origin', 'destination', 'kilometer', 'embedUrl'));
 
     }
 

@@ -56,13 +56,19 @@ class Artikel extends Model
 
     public function latestArtikels($date)
     {
-        if ($date === null) {
+        if (!$date) {
             $date = '2018-01-01 00:00:00';
         }
-        $data = Cache::rememberForever('latestArtikels', function () use ($date){
-            return $this->where('created_at', '>=', $date)->latest()->limit(1000)->get();
+        $latestArtikels = Cache::rememberForever('latestArtikels', function () use ($date) {
+            $query = $this->where('created_at', '>=', $date)->latest()->limit(1000)->get();
+            if (count($query) === 0) {
+                $query = $this->latest()->limit(50)->get();
+            }
+            return $query;
         });
-        return $data;
+        return $latestArtikels;
+
+
     }
 
     public function getArtikelsOfLeverancier($leverancier_id)
@@ -79,16 +85,19 @@ class Artikel extends Model
 
     public function getArtikelByDescription($description)
     {
+        $query = $this->where('omschrijving', 'like', '%' . $description . '%')
+            ->limit(200)->orderBy('omschrijving', 'ASC')->get();
+        if (count($query) === 1) {
+            return $query->first();
+        }
         return $this->where('omschrijving', 'like', '%' . $description . '%')
             ->limit(200)->orderBy('omschrijving', 'ASC')->get();
     }
 
     public function getArtikelByArtikelnr($artikelnr)
     {
-        return $this->where('artikelnr', 'like', '%' . $artikelnr . '%')
-            ->limit(20)->orderBy('omschrijving', 'ASC')->get();
+        return $this->where('artikelnr', $artikelnr)->first();
     }
-
 
 
 }
