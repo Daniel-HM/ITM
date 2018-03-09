@@ -42,11 +42,11 @@ class Artikel extends Model
         return $this->hasOne('App\Image', 'ean', 'ean');
     }
 
-    public function activePromoties()
+    static function activePromoties()
     {
         $today = Carbon::now()->format('Y-m-d');
         $data = Cache::remember('activePromoties', 60, function () use ($today) {
-            return $this->whereHas('promotie', function ($query) use ($today) {
+            return self::whereHas('promotie', function ($query) use ($today) {
                 $query->where('startdatum', '<=', $today)->where('einddatum', '>=', $today);
             })->get();
         });

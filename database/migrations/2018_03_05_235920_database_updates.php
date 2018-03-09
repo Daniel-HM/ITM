@@ -17,7 +17,7 @@ class DatabaseUpdates extends Migration
             $table->engine = "InnoDB";
             $table->increments('id');
             $table->string('type');
-            $table->text('info');
+            $table->text('info')->nullable();
             $table->timestamps();
         });
     }

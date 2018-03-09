@@ -65,11 +65,10 @@ class ProcessArtikels implements ShouldQueue
     {
         Log::info('Artikel database processing has begun!');
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $info = [
-            'aantalArtikels' => $artikel->count(),
-            'aantalLeveranciers' => $leverancier->count()
-        ];
-        $databaseUpdates->create(['type' => 'artikel', 'info' => json_encode($info)]);
+
+        $aantalArtikelStart = $artikel->count();
+        $aantalLeverancierStart = $leverancier->count();
+        $update = $databaseUpdates->create(['type' => 'artikel']);
         DB::table('artikel_staging')->truncate();
         DB::transaction(function () {
             DB::statement('SET NAMES utf8mb4');
@@ -105,8 +104,14 @@ IGNORE 2 LINES
                 ]);
             }
         });
-        Cache::forget('latestArtikels');
-        Cache::forget('activePromoties');
+        $amountAddedArtikels = $artikel->count() - $aantalArtikelStart;
+        $amountAddedLeveranciers = $leverancier->count() - $aantalLeverancierStart;
+        $info = [
+            'aantalNieuweArtikels' => $amountAddedArtikels,
+            'aantalNieuweLeveranciers' => $amountAddedLeveranciers
+        ];
+        $databaseUpdates->where('id', $update->id)->update(['info' => json_encode($info)]);
+        Cache::tags('homepageStats')->flush();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         Log::info('Artikel database processing is done!');
     }

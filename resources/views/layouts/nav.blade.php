@@ -18,7 +18,7 @@
                     @if(auth()->user()->isAdmin())
                         <a class="dropdown-item" href="{{ route('scanner') }}">Scanner</a>
                         <a class="dropdown-item" href="{{ route('upload') }}">Upload</a>
-                        <a class="dropdown-item" href="{{ route('add_user') }}">Gebuiker toevoegen</a>
+                        <a class="dropdown-item" href="{{ route('add_user') }}">Gebruiker toevoegen</a>
                     @endif
                     <a class="dropdown-item" href="{{ route('logout') }}"><strong>Logout</strong></a>
                 </div>
@@ -29,14 +29,14 @@
                 <div class="input-group-prepend">
                     <div class="input-group-text">
                         {{--<i class="fas fa-search"></i>--}}
-                        <select class="form-control" name="searchOption">
+                        <select class="form-control" name="searchOption" id="searchOption">
                             <option value="ean" @if(old('searchOption') == 'ean') {{ 'selected' }}@endif>EAN</option>
                             <option value="naam" @if(old('searchOption') == 'naam') {{ 'selected' }}@endif>Naam</option>
                             <option value="artikelnr" @if(old('searchOption') == 'artikelnr') {{ 'selected' }}@endif>Artikelnr.</option>
                             <option value="leverancier" @if(old('searchOption') == 'leverancier') {{ 'selected' }}@endif>Leverancier</option>
                         </select></div>
                 </div>
-                <input type="text" id="query" name="query" class="form-control" autocomplete="off"
+                <input type="number" id="query" name="query" class="form-control" autocomplete="off"
                        placeholder="" required
                        @if(Route::currentRouteName() != 'leveringskosten') {{ 'autofocus' }}@endif>
                 {{ csrf_field() }}

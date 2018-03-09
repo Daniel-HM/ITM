@@ -54,6 +54,14 @@
                 "sSearch": "Verfijn resultaten"
             }
         });
+
+        function searchChange() {
+            var inputBox = document.getElementById('query');
+            this.value === 'ean' ? inputBox.type = 'number' : inputBox.type = 'text';
+        }
+
+        document.getElementById('searchOption').addEventListener('change', searchChange);
+
         // // If cookie is set, scroll to the position saved in the cookie.
         // if ($.cookie("scroll") !== null) {
         //     $(document).scrollTop($.cookie("scroll"));
